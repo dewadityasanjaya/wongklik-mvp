@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
   Eye,
   HeartHandshake,
   Landmark,
@@ -47,6 +49,37 @@ const journey = [
     icon: HeartHandshake,
     title: "Jaga rasa hormat",
     text: "Kenali budaya bersama konteks dan masyarakat yang merawatnya.",
+  },
+];
+
+const wayangVideos = [
+  {
+    id: "QNttWdF5qcU",
+    category: "Pementasan di Pura Puseh",
+    title: "Wayang Wong Tejakula · Bagian I",
+    description: "Rekaman iWagu Production, dipublikasikan Desember 2022.",
+    frameTitle: "Tari Wayang Wong Tejakula di Pura Puseh Desa Adat Tejakula, bagian pertama",
+  },
+  {
+    id: "WKFiBscBCM8",
+    category: "Potongan adegan",
+    title: "Sepenggal adegan Ramayana",
+    description: "Rekaman Gede Partha Wijaya di Pura Baleagung, Sukawana.",
+    frameTitle: "Cuplikan pementasan Wayang Wong Tejakula di Pura Baleagung Desa Sukawana",
+  },
+  {
+    id: "B0pmr0rZbB8",
+    category: "Wayang Wong Guna Murti · Bagian 1",
+    title: "Wayang Wong Guna Murti Desa Tejakula — Buleleng · Bagian 1",
+    description: "Dokumentasi pementasan Wayang Wong Guna Murti Desa Tejakula, Buleleng.",
+    frameTitle: "Wayang Wong Guna Murti Desa Tejakula - Buleleng Part-1",
+  },
+  {
+    id: "XmF17kyu6Bw",
+    category: "Wayang Wong Guna Murti · Bagian 2",
+    title: "Wayang Wong Guna Murti Desa Tejakula — Buleleng · Bagian 2",
+    description: "Dokumentasi pementasan Wayang Wong Guna Murti Desa Tejakula, Buleleng.",
+    frameTitle: "Wayang Wong Guna Murti Desa Tejakula - Buleleng Part-2",
   },
 ];
 
@@ -163,31 +196,17 @@ function Home() {
 
       <section className="product-section section section-tint">
         <div className="container product-grid">
-          <div
-            className="product-display"
-            aria-label="Ilustrasi konseptual gantungan kunci WONGKLIK"
-          >
-            <div className="product-orbit orbit-one" />
-            <div className="product-orbit orbit-two" />
-            <div className="keychain-ring">
-              <span />
-            </div>
-            <div className="keychain-body">
-              <span className="keychain-flower">✳</span>
-              <span className="keychain-word">
-                WONG
-                <br />
-                KLIK
-              </span>
-              <span className="keychain-label">CERITA DI BALIK WAYANG</span>
-              <span className="keychain-qr">
-                <QrCode size={31} strokeWidth={1.5} />
-              </span>
-            </div>
-            <span className="product-note note-top">ilustrasi karakter</span>
-            <span className="product-note note-bottom">
-              pindai untuk mengenal
-            </span>
+          <div className="product-display">
+            <div className="product-orbit orbit-one" aria-hidden="true" />
+            <div className="product-orbit orbit-two" aria-hidden="true" />
+            <img
+              className="product-keychain"
+              src={`${import.meta.env.BASE_URL}images/wongklik-keychain.png`}
+              alt="Gantungan kunci WONGKLIK dengan ilustrasi tokoh Wayang dan QR code"
+              fetchPriority="high"
+            />
+            <span className="product-note note-top">Ilustrasi karakter</span>
+            <span className="product-note note-bottom">Pindai untuk mengenal</span>
           </div>
           <div className="product-copy">
             <span className="eyebrow">Bukan sekadar aksesori</span>
@@ -311,6 +330,7 @@ function Home() {
 }
 
 function WayangWong() {
+  const [videoIndex, setVideoIndex] = useState(0);
   usePageTitle("Wayang Wong Tejakula");
   return (
     <main id="main">
@@ -385,6 +405,18 @@ function WayangWong() {
               </a>
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="section story-teaser">
+        <div className="container story-teaser-inner">
+          <div>
+            <span className="eyebrow">Sebuah kisah yang terus hidup</span>
+            <h2>Kenali perjalanan Rama dalam tradisi Tejakula.</h2>
+          </div>
+          <Link to="/cerita-ramayana" className="button button-dark">
+            Baca kisah Ramayana <ArrowUpRight size={17} />
+          </Link>
         </div>
       </section>
 
@@ -484,64 +516,69 @@ function WayangWong() {
               </h2>
             </div>
             <p className="section-intro">
-              Cuplikan ini direkam saat pementasan di lingkungan pura. Tonton
-              dengan memahami konteks ritual dan keterangan dari pembuat
-              videonya.
+              Jelajahi dokumentasi pementasan dan cuplikan Wayang Wong Tejakula.
+              Gunakan tautan sumber untuk melihat keterangan dari kanal
+              penerbitnya.
             </p>
           </div>
-          <div className="video-grid">
-            <article className="video-card">
-              <div className="video-frame">
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/QNttWdF5qcU?rel=0"
-                  title="Tari Wayang Wong Tejakula di Pura Puseh Desa Adat Tejakula, bagian pertama"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
+          <div className="video-carousel" role="region" aria-roledescription="carousel" aria-label="Video Wayang Wong Tejakula">
+            <div className="video-grid" aria-live="polite">
+              <article className="video-card" aria-roledescription="slide" aria-label={`Video ${videoIndex + 1} dari ${wayangVideos.length}`}>
+                <div className="video-frame">
+                  <iframe
+                    key={wayangVideos[videoIndex].id}
+                    src={`https://www.youtube-nocookie.com/embed/${wayangVideos[videoIndex].id}?rel=0`}
+                    title={wayangVideos[videoIndex].frameTitle}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="video-meta">
+                  <span><Play size={14} /> {wayangVideos[videoIndex].category}</span>
+                  <a
+                    href={`https://youtu.be/${wayangVideos[videoIndex].id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Tonton di YouTube <ExternalLink size={14} />
+                  </a>
+                </div>
+                <h3>{wayangVideos[videoIndex].title}</h3>
+                <p>{wayangVideos[videoIndex].description}</p>
+              </article>
+            </div>
+            <div className="video-carousel-controls">
+              <button
+                className="video-carousel-arrow"
+                type="button"
+                aria-label="Video sebelumnya"
+                onClick={() => setVideoIndex((index) => (index - 1 + wayangVideos.length) % wayangVideos.length)}
+              >
+                <ChevronLeft size={21} />
+              </button>
+              <div className="video-carousel-dots" aria-label="Pilih video">
+                {wayangVideos.map((video, index) => (
+                  <button
+                    key={video.id}
+                    type="button"
+                    className={index === videoIndex ? "is-active" : ""}
+                    aria-label={`Tampilkan video ${index + 1}: ${video.title}`}
+                    aria-current={index === videoIndex ? "true" : undefined}
+                    onClick={() => setVideoIndex(index)}
+                  />
+                ))}
               </div>
-              <div className="video-meta">
-                <span>
-                  <Play size={14} /> PEMENTASAN DI PURA PUSEH
-                </span>
-                <a
-                  href="https://www.youtube.com/watch?v=QNttWdF5qcU"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Tonton di YouTube <ExternalLink size={14} />
-                </a>
-              </div>
-              <h3>Wayang Wong Tejakula · Bagian I</h3>
-              <p>Rekaman iWagu Production, dipublikasikan Desember 2022.</p>
-            </article>
-            <article className="video-card">
-              <div className="video-frame">
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/WKFiBscBCM8?rel=0"
-                  title="Cuplikan pementasan Wayang Wong Tejakula di Pura Baleagung Desa Sukawana"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              </div>
-              <div className="video-meta">
-                <span>
-                  <Play size={14} /> POTONGAN ADEGAN
-                </span>
-                <a
-                  href="https://www.youtube.com/watch?v=WKFiBscBCM8"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Tonton di YouTube <ExternalLink size={14} />
-                </a>
-              </div>
-              <h3>Sepenggal adegan Ramayana</h3>
-              <p>Rekaman Gede Partha Wijaya di Pura Baleagung, Sukawana.</p>
-            </article>
+              <button
+                className="video-carousel-arrow"
+                type="button"
+                aria-label="Video berikutnya"
+                onClick={() => setVideoIndex((index) => (index + 1) % wayangVideos.length)}
+              >
+                <ChevronRight size={21} />
+              </button>
+            </div>
           </div>
           <p className="video-note">
             Video dimiliki dan dipublikasikan oleh kanal masing-masing. Sematan
@@ -682,6 +719,174 @@ function WayangWong() {
   );
 }
 
+function RamayanaStory() {
+  usePageTitle("WONGKLIK");
+  return (
+    <main id="main" className="ramayana-page">
+      <section className="page-hero culture-hero ramayana-hero">
+        <div className="hero-grain" aria-hidden="true" />
+        <div className="container culture-hero-inner">
+          <span className="eyebrow">Kisah Ramayana · Tejakula, Bali</span>
+          <h1>
+            Perjalanan Rama,
+            <br />
+            <span>yang terus diceritakan.</span>
+          </h1>
+          <p>
+            Dalam Wayang Wong Tejakula, Ramayana hadir melalui tokoh bertopeng,
+            gerak tari, dialog, dan kisah-kisah yang diwariskan dalam kehidupan
+            masyarakat.
+          </p>
+          <a href="#awal-kisah" className="button button-gold">
+            Ikuti ceritanya <ArrowDown size={16} />
+          </a>
+        </div>
+        <span className="culture-index">CERITA / RAMAYANA</span>
+      </section>
+
+      <section className="section ramayana-intro" id="awal-kisah">
+        <div className="container ramayana-lead">
+          <span className="eyebrow">01 — Sebuah perjalanan</span>
+          <div>
+            <h2>Kisah tentang pilihan, kesetiaan, dan keberanian.</h2>
+            <p>
+              Ramayana mengikuti perjalanan Rama, tokoh yang kerap dipahami
+              sebagai teladan seorang pemimpin dan manusia. Dalam kisah yang
+              dikenal luas, Rama berjuang bersama Sita dan adiknya, Laksmana,
+              untuk menghadapi Rahwana dan membebaskan Sita.
+            </p>
+            <p>
+              Berbagai masyarakat di Asia Tenggara menceritakan Ramayana dengan
+              tafsir dan tokoh yang khas. Di Bali, cerita ini menjadi bagian dari
+              tradisi pertunjukan, termasuk Wayang Wong di Desa Tejakula.
+            </p>
+          </div>
+        </div>
+        <div className="container ramayana-characters" aria-label="Tokoh dalam Ramayana">
+          <article><span>01</span><h3>Rama</h3><p>Pusat perjalanan dan sosok yang berjuang menegakkan kebaikan.</p></article>
+          <article><span>02</span><h3>Sita</h3><p>Tokoh penting dalam perjalanan yang menguji kesetiaan dan keteguhan.</p></article>
+          <article><span>03</span><h3>Laksmana</h3><p>Adik Rama yang mendampinginya dalam menghadapi berbagai tantangan.</p></article>
+          <article><span>04</span><h3>Rahwana</h3><p>Tokoh lawan Rama dalam kisah besar tentang pertarungan dan akibat pilihan.</p></article>
+        </div>
+      </section>
+
+      <section className="ramayana-image-gallery" aria-label="Foto terkait Ramayana dan Wayang Wong">
+        <div className="container ramayana-gallery-grid">
+          <figure className="ramayana-photo ramayana-photo-tejakula">
+            <img
+              src={`${import.meta.env.BASE_URL}images/wayang-wong-hero.webp`}
+              alt="Seorang anak melihat topeng Wayang Wong Tejakula yang digunakan dalam kisah Ramayana"
+              loading="lazy"
+            />
+            <figcaption>
+              <span>WAYANG WONG TEJAKULA · BULELENG</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Wayang_wong_Tejakula.jpg" target="_blank" rel="noreferrer">
+                Foto Imadedana · CC BY-SA 4.0 <ExternalLink size={13} />
+              </a>
+            </figcaption>
+          </figure>
+          <figure className="ramayana-photo ramayana-photo-rama">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Rama_dan_Sinta.jpg"
+              alt="Penari memerankan Rama dan Sinta dalam pertunjukan Wayang Wong Ramayana"
+              loading="lazy"
+            />
+            <figcaption>
+              <span>RAMA DAN SINTA · PRAMBANAN</span>
+              <a href="https://commons.wikimedia.org/wiki/File:Rama_dan_Sinta.jpg" target="_blank" rel="noreferrer">
+                Foto Duduh Sadarachmat · CC BY-SA 4.0 <ExternalLink size={13} />
+              </a>
+            </figcaption>
+          </figure>
+        </div>
+        <p className="container ramayana-gallery-note">
+          Foto Rama dan Sinta menampilkan pertunjukan Wayang Wong Ramayana di Prambanan sebagai gambaran tradisi yang lebih luas; foto tersebut bukan dokumentasi pementasan di Tejakula.
+        </p>
+      </section>
+
+      <section className="section section-tint ramayana-after">
+        <div className="container ramayana-split">
+          <div>
+            <span className="eyebrow">02 — Kisah yang berlanjut</span>
+            <h2>Di Bali, cerita tidak selalu berakhir setelah perang.</h2>
+          </div>
+          <div className="ramayana-copy">
+            <p>
+              Dalam ringkasan tentang Wayang Wong Tejakula yang menjadi acuan
+              halaman ini, kisah Ramayana di Bali digambarkan berlanjut setelah
+              Rama mengalahkan Rahwana dan Sita kembali dibebaskan. Peristiwa
+              setelah perang pun hadir dalam cerita yang dipentaskan.
+            </p>
+            <p>
+              Karena tradisi ini diwariskan secara lisan, asal-usul sejarahnya
+              tidak dapat dipastikan dengan rinci dari satu sumber saja. Yang
+              terus tampak adalah hubungan antara kisah Ramayana, pementasan,
+              dan upacara keagamaan di Tejakula.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section ramayana-performance">
+        <div className="container ramayana-split">
+          <div>
+            <span className="eyebrow">03 — Cerita di atas panggung</span>
+            <h2>Topeng, bahasa, dan gerak membawa kisah mendekat.</h2>
+          </div>
+          <div className="ramayana-copy">
+            <p>
+              Dalam Wayang Wong Tejakula, para penari mengenakan tapel untuk
+              memerankan tokoh. Rujukan koreografi mencakup cerita Ramayana dalam
+              bahasa Sanskerta, sementara dialog dituturkan dalam bahasa Bali
+              Kawi yang halus.
+            </p>
+            <p>
+              Seorang penerjemah atau pelayan membantu penonton memahami apa
+              yang sedang terjadi di antara para tokoh. Dengan begitu, kisah
+              dapat diikuti melalui kata-kata, gerak, dan ekspresi yang dibawa
+              oleh topeng.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-tint ramayana-meaning">
+        <div className="container ramayana-meaning-inner">
+          <span className="eyebrow">04 — Makna dan perenungan</span>
+          <h2>
+            Pertarungan di panggung menjadi ruang untuk merenungkan diri.
+          </h2>
+          <p>
+            Kisah-kisah Ramayana yang dipentaskan dapat menjadi pelajaran
+            tentang pertarungan antara kebaikan dan keburukan, keakuan dan
+            ketulusan. Dalam keyakinan Hindu Bali sebagaimana diceritakan dalam
+            bahan rujukan, kehidupan dipengaruhi oleh daya yang baik maupun
+            buruk. Tokoh dan peristiwa di panggung mengajak penonton merenungkan
+            pilihan serta sikap dalam hidup.
+          </p>
+          <p>
+            Bagi tradisi ini, pementasan bukan sekadar menceritakan ulang sebuah
+            epos. Penghayatan penari dan pengalaman penonton turut membuka
+            ruang untuk mendekati nilai kerohanian.
+          </p>
+        </div>
+      </section>
+
+      <section className="closing ramayana-closing">
+        <div className="container closing-inner">
+          <div>
+            <span className="eyebrow">Kenali tradisi yang menjaganya</span>
+            <h2>Ramayana hidup melalui cerita<span>dan masyarakat yang merawatnya.</span></h2>
+          </div>
+          <Link to="/wayang-wong-tejakula" className="button button-gold">
+            Tentang Wayang Wong <ArrowUpRight size={17} />
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function NotFound() {
   usePageTitle("Halaman tidak ditemukan");
   return (
@@ -710,6 +915,7 @@ export default function App() {
         <Route path="/characters" element={<WayangWong />} />
         <Route path="/characters/:id" element={<WayangWong />} />
         <Route path="/wayang-wong-tejakula" element={<WayangWong />} />
+        <Route path="/cerita-ramayana" element={<RamayanaStory />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

@@ -14,7 +14,7 @@ export default function Footer() {
         <nav className="footer-nav" aria-label="Footer">
           <Link to="/">Beranda</Link>
           <Link to="/wayang-wong-tejakula">Tentang Wayang Wong</Link>
-          <Link to="/#cara-kerja">Cara kerja</Link>
+          <Link to="/cerita-ramayana">Cerita Ramayana</Link>
         </nav>
       </div>
       <div className="container footer-base">

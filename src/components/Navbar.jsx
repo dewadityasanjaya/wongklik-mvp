@@ -46,7 +46,7 @@ export default function Navbar() {
         <nav id="site-nav" className={open ? "nav-links is-open" : "nav-links"} aria-label="Navigasi utama">
           <NavLink to="/" end>Beranda</NavLink>
           <NavLink to="/wayang-wong-tejakula">Tentang Wayang Wong</NavLink>
-          <Link to="/#cara-kerja">Cara kerja</Link>
+          <NavLink to="/cerita-ramayana">Cerita Ramayana</NavLink>
           <Link className="nav-cta" to="/wayang-wong-tejakula">
             Kenali ceritanya <span aria-hidden="true">↗</span>
           </Link>
